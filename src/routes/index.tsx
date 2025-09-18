@@ -12,6 +12,7 @@ import { withAuth } from "@/utils/withAuth";
 import Unauthorized from "@/pages/Unauthorized";
 import { role } from "@/constants/role";
 import type { TRole } from "@/types";
+import { agentSidebarItems } from "./agentSidebarItems";
 
 export const router = createBrowserRouter([
   {
@@ -25,7 +26,7 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    Component: withAuth(DashboardLayout, role.superAdmin as TRole),
+    Component: withAuth(DashboardLayout, role.admin as TRole),
     path: "/admin",
     children: [
       { index: true, element: <Navigate to="/admin/analytics" /> },
@@ -38,6 +39,14 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <Navigate to="/user/bookings" /> },
       ...generateRoutes(userSidebarItems),
+    ],
+  },
+   {
+    Component: withAuth(DashboardLayout, role.agent as TRole),
+    path: "/agent",
+    children: [
+      { index: true, element: <Navigate to="/agent/add-money" /> },
+      ...generateRoutes(agentSidebarItems),
     ],
   },
   {
