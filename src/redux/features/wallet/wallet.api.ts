@@ -18,6 +18,15 @@ export const  walletApi= baseApi.injectEndpoints({
       }),
       invalidatesTags: ["WALLET"],
     }),
+    transfer: builder.mutation({
+      query: (payload: { toUserId: string; amount: number }) => ({
+        url: "/wallet/transfer",
+        method: "POST",
+        data: payload,
+      }),
+      invalidatesTags: ["WALLET", "TRANSACTIONS"],
+    }),
+    
  getWallet: builder.query({
   query: (userId: string) => ({
     url: `/wallet/${userId}`,
@@ -27,4 +36,4 @@ export const  walletApi= baseApi.injectEndpoints({
     }),
 });
 
-export const { useDepositMutation, useGetWalletQuery,useWithdrawMutation  } = walletApi;
+export const { useDepositMutation, useGetWalletQuery,useWithdrawMutation,useTransferMutation  } = walletApi;
