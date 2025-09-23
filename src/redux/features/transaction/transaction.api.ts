@@ -1,30 +1,5 @@
-// src/redux/features/transaction/transaction.api.ts
 import { baseApi } from "@/redux/baseApi";
 
-export const transactionApi = baseApi.injectEndpoints({
-  endpoints: (builder) => ({
-    getMyTransactions: builder.query<
-      {
-        data: Transaction[];
-        page: number;
-        limit: number;
-        total: number;
-      },
-      { page?: number; limit?: number }>
-    
-    ({
-      query: ({ page = 1, limit = 10 }) => ({
-        url: `/transaction/me?page=${page}&limit=${limit}`,
-        method: "GET",
-      }),
-      providesTags: ["TRANSACTIONS"],
-    }),
-  }),
-});
-
-export const { useGetMyTransactionsQuery } = transactionApi;
-
-// Types
 export interface Transaction {
   _id: string;
   type: string;
@@ -34,3 +9,38 @@ export interface Transaction {
   description?: string;
   createdAt: string;
 }
+
+export const transactionApi = baseApi.injectEndpoints({
+  endpoints: (builder) => ({
+    getMyTransactions: builder.query<
+      {
+        data: Transaction[];
+        pagination: { page: number; limit: number; total: number };
+      },
+      {
+        page?: number;
+        limit?: number;
+        type?: string;
+        startDate?: string;
+        endDate?: string;
+      }
+    >({
+      query: ({ page = 1, limit = 10, type, startDate, endDate }) => {
+        const params = new URLSearchParams();
+        params.append("page", page.toString());
+        params.append("limit", limit.toString());
+        if (type) params.append("type", type); // send lowercase or match DB
+        if (startDate) params.append("startDate", startDate);
+        if (endDate) params.append("endDate", endDate);
+
+        return {
+          url: `/transaction/me?${params.toString()}`,
+          method: "GET",
+        };
+      },
+      providesTags: ["TRANSACTIONS"],
+    }),
+  }),
+});
+
+export const { useGetMyTransactionsQuery } = transactionApi;

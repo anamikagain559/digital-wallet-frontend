@@ -1,17 +1,19 @@
 
-import AddMoney from "@/pages/Agent/AddMoney";
 import Commissions from "@/pages/Agent/Commissions";
 import Profile from "@/pages/Agent/Profile";
 import Transactions from "@/pages/Agent/Transactions";
 import WithdrawMoney from "@/pages/Agent/WithdrawMoney";
 import type { ISidebarItem } from "@/types";
+import { lazy } from "react";
 
+const AddMoney = lazy(() => import("@/pages/Agent/AddMoney"));
 export const agentSidebarItems: ISidebarItem[] = [
   {
     title: "History",
     items: [
+    
       {
-        title: "Add Money",
+        title: "AddMoney",
         url: "/agent/add-money",
         component: AddMoney,
       },
