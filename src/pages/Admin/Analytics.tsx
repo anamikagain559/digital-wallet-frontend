@@ -25,7 +25,7 @@ export default function Analytics() {
         <Card><CardHeader><CardTitle>Volume</CardTitle></CardHeader><CardContent><p className="text-2xl font-bold">৳ {data.totalVolume}</p></CardContent></Card>
       </div>
 
-      {/* Transaction Volume Chart */}
+ 
       <Card>
         <CardHeader><CardTitle>Transactions Over Time</CardTitle></CardHeader>
         <CardContent>
