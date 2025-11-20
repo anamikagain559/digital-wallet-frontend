@@ -1,35 +1,43 @@
 import HeroSection from "@/components/modules/HomePage/HeroSection"
 import { motion } from "framer-motion";
-
-
+import FeatureCard from "@/components/modules/HomePage/FeatureCard";
+import SkeletonCard from "@/components/SkeletonCard";
+import { fakeFetchFeatures } from "@/utils/fakeApi";
+import { FaPiggyBank, FaCreditCard, FaChartLine, FaUmbrella } from "react-icons/fa";
+import React from "react";
 function Homepage() {
+    const [loading, setLoading] = React.useState(true);
+  const [features, setFeatures] = React.useState<any[]>([]);
+
+  React.useEffect(() => {
+    fakeFetchFeatures().then((res) => {
+      setFeatures(res);
+      setLoading(false);
+    });
+  }, []);
   return (
     <div>
         <HeroSection />
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-        <section className="text-center p-16 bg-blue-50">
-        <h2 className="text-4xl font-bold mb-4">Welcome to MyService</h2>
-        <p className="text-lg mb-6">A modern platform designed for your needs</p>
-        <button className="bg-blue-600 text-white px-6 py-3 rounded-xl mr-4">Get Started</button>
-        <button className="border border-blue-600 text-blue-600 px-6 py-3 rounded-xl">Learn More</button>
-        </section>
+         <section className="container mx-auto px-4 py-12">
+        <div className="grid gap-6 md:grid-cols-4">
+          {loading ? (
+            [1,2,3,4].map(i => <SkeletonCard key={i} />)
+          ) : (
+            features.map((f) => (
+              <FeatureCard key={f.id} title={f.title} desc={f.desc} icon={
+                f.id===1 ? <FaPiggyBank /> : f.id===2 ? <FaCreditCard /> : f.id===3 ? <FaChartLine /> : <FaUmbrella />
+              }/>
+            ))
+          )}
+        </div>
+      </section>
+
+      <section className="container mx-auto px-4 py-10">
+        <motion.div initial={{opacity:0}} animate={{opacity:1}} transition={{duration:.5}} className="bg-white p-8 rounded-xl shadow">
+          <h3 className="text-2xl font-semibold">Welcome to BankCo</h3>
+          <p className="mt-3 text-gray-600">We offer a range of banking services to meet your needs...</p>
         </motion.div>
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-        <section className="text-center p-16 bg-blue-50">
-        <h2 className="text-4xl font-bold mb-4">Welcome to MyService</h2>
-        <p className="text-lg mb-6">A modern platform designed for your needs</p>
-        <button className="bg-blue-600 text-white px-6 py-3 rounded-xl mr-4">Get Started</button>
-        <button className="border border-blue-600 text-blue-600 px-6 py-3 rounded-xl">Learn More</button>
-        </section>
-        </motion.div>
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-        <section className="text-center p-16 bg-blue-50">
-        <h2 className="text-4xl font-bold mb-4">Welcome to MyService</h2>
-        <p className="text-lg mb-6">A modern platform designed for your needs</p>
-        <button className="bg-blue-600 text-white px-6 py-3 rounded-xl mr-4">Get Started</button>
-        <button className="border border-blue-600 text-blue-600 px-6 py-3 rounded-xl">Learn More</button>
-        </section>
-        </motion.div>
+      </section>
     </div>
   )
 }
