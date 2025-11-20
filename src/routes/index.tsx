@@ -14,6 +14,10 @@ import Unauthorized from "@/pages/Unauthorized";
 import { role } from "@/constants/role";
 import type { TRole } from "@/types";
 import { agentSidebarItems } from "./agentSidebarItems";
+import FeaturesPage from "@/pages/FeaturesPage";
+import ContactPage from "@/pages/ContactPage";
+import PricingPage from "@/pages/PricingPage";
+import FAQPage from "@/pages/FAQPage";
 
 export const router = createBrowserRouter([
   {
@@ -25,9 +29,25 @@ export const router = createBrowserRouter([
         index: true,
       },
       {
-        Component: withAuth(About),
+        Component: About,
         path: "about",
       },
+        {
+        Component: FeaturesPage,
+        path: "features",
+      },
+      {
+       Component: PricingPage,
+        path: "pricing",
+      },
+      {
+        Component: ContactPage,
+        path: "contact",
+      },
+      {
+        Component: FAQPage,
+        path : "faq",
+      }
     ],
   },
   {
