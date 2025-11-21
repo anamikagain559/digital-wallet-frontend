@@ -1,27 +1,104 @@
-import { Link } from "react-router";
-import { motion } from "framer-motion";
-const HeroSection = () => {
-  return (
-     <section className="bg-gradient-to-br from-blue-600 to-blue-500 text-white">
-      <div className="container mx-auto px-4 py-20 md:flex md:items-center md:justify-between">
-        <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }} className="max-w-xl">
-          <h1 className="text-3xl md:text-5xl font-bold leading-tight">Simplify your financial journey</h1>
-          <p className="mt-4 text-blue-100">Secure accounts, easy transfers, and personalized advice — all in one place.</p>
-          <div className="mt-6 flex gap-3">
-            <Link to="/signup" className="bg-white text-blue-600 px-6 py-3 rounded font-semibold">Get started</Link>
-            <Link to="/features" className="border border-white/60 px-5 py-3 rounded">Learn more</Link>
-          </div>
-        </motion.div>
+import { Star } from "lucide-react";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 
-        <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.6 }} className="mt-8 md:mt-0">
-          <div className="w-72 h-72 bg-white/10 rounded-xl flex items-center justify-center">
-            {/* you can replace next block with an illustration */}
-            <img src="/bank-illustration.png" alt="bank" className="w-56" />
-          </div>
-        </motion.div>
-      </div>
-    </section>
-  )
+interface Hero7Props {
+  heading?: string;
+  description?: string;
+  button?: {
+    text: string;
+    url: string;
+  };
+  reviews?: {
+    count: number;
+    rating?: number;
+    avatars: {
+      src: string;
+      alt: string;
+    }[];
+  };
 }
 
-export default HeroSection
+const HeroSection = ({
+  heading = "A Collection of Components Built With Shadcn & Tailwind",
+  description = "Finely crafted components built with React, Tailwind and Shadcn UI. Developers can copy and paste these blocks directly into their project.",
+  button = {
+    text: "Discover all components",
+    url: "https://www.shadcnblocks.com",
+  },
+  reviews = {
+    count: 200,
+    rating: 5.0,
+    avatars: [
+      {
+        src: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/avatar-1.webp",
+        alt: "Avatar 1",
+      },
+      {
+        src: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/avatar-2.webp",
+        alt: "Avatar 2",
+      },
+      {
+        src: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/avatar-3.webp",
+        alt: "Avatar 3",
+      },
+      {
+        src: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/avatar-4.webp",
+        alt: "Avatar 4",
+      },
+      {
+        src: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/avatar-5.webp",
+        alt: "Avatar 5",
+      },
+    ],
+  },
+}: Hero7Props) => {
+  return (
+    <section className="py-32">
+      <div className="container text-center">
+        <div className="mx-auto flex max-w-5xl flex-col gap-6">
+          <h1 className="text-3xl font-semibold lg:text-6xl">{heading}</h1>
+
+          <p className="text-muted-foreground text-balance lg:text-lg">
+            {description}
+          </p>
+        </div>
+
+        <Button asChild size="lg" className="mt-10">
+          <a href={button.url}>{button.text}</a>
+        </Button>
+
+        <div className="mx-auto mt-10 flex w-fit flex-col items-center gap-4 sm:flex-row">
+          <span className="mx-4 inline-flex items-center -space-x-4">
+            {reviews.avatars.map((avatar, index) => (
+              <Avatar key={index} className="size-14 border">
+                <AvatarImage src={avatar.src} alt={avatar.alt} />
+              </Avatar>
+            ))}
+          </span>
+
+          <div>
+            <div className="flex items-center gap-1">
+              {[...Array(5)].map((_, index) => (
+                <Star
+                  key={index}
+                  className="size-5 fill-yellow-400 text-yellow-400"
+                />
+              ))}
+
+              <span className="mr-1 font-semibold">
+                {reviews.rating?.toFixed(1)}
+              </span>
+            </div>
+
+            <p className="text-muted-foreground text-left font-medium">
+              from {reviews.count}+ reviews
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default HeroSection;
