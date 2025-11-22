@@ -1,4 +1,5 @@
 
+import AgentDashboard from "@/pages/Agent/AgentDashboard";
 import Commissions from "@/pages/Agent/Commissions";
 import Profile from "@/pages/Agent/Profile";
 import Transactions from "@/pages/Agent/Transactions";
@@ -11,6 +12,12 @@ export const agentSidebarItems: ISidebarItem[] = [
   {
     title: "History",
     items: [
+
+       {
+        title: "AgentDashboard",
+        url: "/agent/aent-dashboard",
+        component: AgentDashboard,
+      },
     
       {
         title: "AddMoney",
