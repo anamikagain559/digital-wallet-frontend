@@ -15,7 +15,7 @@ export const agentSidebarItems: ISidebarItem[] = [
 
        {
         title: "AgentDashboard",
-        url: "/agent/aent-dashboard",
+        url: "/agent/agent-dashboard",
         component: AgentDashboard,
       },
     

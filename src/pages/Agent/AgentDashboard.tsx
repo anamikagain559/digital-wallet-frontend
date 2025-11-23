@@ -1,44 +1,13 @@
-import { useState } from "react";
-import { NavLink } from "react-router";
+
+
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { DollarSign, User, Menu, LogOut, BarChart, History } from "lucide-react";
 
 export default function AgentDashboard() {
-  const [open, setOpen] = useState(true);
+
 
   return (
     <div className="flex w-full min-h-screen bg-gray-100 dark:bg-zinc-900 text-gray-900 dark:text-white">
-      {/* Sidebar */}
-      <aside className={`${open ? "w-64" : "w-20"} h-screen bg-white dark:bg-zinc-800 shadow-lg p-4 transition-all duration-300 sticky top-0`}> 
-        <button className="mb-6" onClick={() => setOpen(!open)}>
-          <Menu />
-        </button>
-        <nav className="space-y-3">
-          <NavLink className="flex items-center gap-3 p-2 rounded-xl hover:bg-gray-200 dark:hover:bg-zinc-700" to="/agent/dashboard">
-            <BarChart /> {open && "Dashboard"}
-          </NavLink>
-          <NavLink className="flex items-center gap-3 p-2 rounded-xl hover:bg-gray-200 dark:hover:bg-zinc-700" to="/agent/add-money">
-            <DollarSign /> {open && "Add Money"}
-          </NavLink>
-          <NavLink className="flex items-center gap-3 p-2 rounded-xl hover:bg-gray-200 dark:hover:bg-zinc-700" to="/agent/withdraw">
-            <History /> {open && "Withdraw"}
-          </NavLink>
-          <NavLink className="flex items-center gap-3 p-2 rounded-xl hover:bg-gray-200 dark:hover:bg-zinc-700" to="/agent/transactions">
-            <History /> {open && "Transactions"}
-          </NavLink>
-          <NavLink className="flex items-center gap-3 p-2 rounded-xl hover:bg-gray-200 dark:hover:bg-zinc-700" to="/agent/profile">
-            <User /> {open && "Profile"}
-          </NavLink>
-        </nav>
-        <div className="absolute bottom-6 left-4">
-          <Button variant="destructive" className="flex items-center gap-2"><LogOut /> {open && "Logout"}</Button>
-        </div>
-      </aside>
-
-      {/* Main Content */}
       <main className="flex-1 p-6 space-y-6 overflow-y-auto">
-        {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Card className="rounded-2xl shadow">
             <CardContent className="p-4 text-center">
