@@ -1,65 +1,56 @@
+// AgentOverview.tsx
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useGetAgentOverviewQuery } from "@/redux/features/agent/agentApi"; // RTK Query API slice
+import { Skeleton } from "@/components/ui/skeleton"; // optional skeleton for loading
 
+const AgentDashboard: React.FC = () => {
+  const { data, isLoading, isError, error } = useGetAgentOverviewQuery(undefined);
 
-import { Card, CardContent } from "@/components/ui/card";
+  if (isLoading) {
+    return (
+      <div className="space-y-4 max-w-3xl mx-auto">
+        <Skeleton className="h-20 w-full rounded-md" />
+        <Skeleton className="h-20 w-full rounded-md" />
+        <Skeleton className="h-20 w-full rounded-md" />
+      </div>
+    );
+  }
 
-export default function AgentDashboard() {
-
+  if (isError) {
+    return <p className="text-red-500 text-center">Error loading overview: {(error as any)?.data?.message || "Unknown error"}</p>;
+  }
 
   return (
-    <div className="flex w-full min-h-screen bg-gray-100 dark:bg-zinc-900 text-gray-900 dark:text-white">
-      <main className="flex-1 p-6 space-y-6 overflow-y-auto">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card className="rounded-2xl shadow">
-            <CardContent className="p-4 text-center">
-              <h2 className="text-xl font-semibold">Total Cash In</h2>
-              <p className="text-3xl font-bold mt-2">৳ 85,000</p>
-            </CardContent>
-          </Card>
-          <Card className="rounded-2xl shadow">
-            <CardContent className="p-4 text-center">
-              <h2 className="text-xl font-semibold">Total Cash Out</h2>
-              <p className="text-3xl font-bold mt-2">৳ 40,000</p>
-            </CardContent>
-          </Card>
-          <Card className="rounded-2xl shadow">
-            <CardContent className="p-4 text-center">
-              <h2 className="text-xl font-semibold">Commission Earned</h2>
-              <p className="text-3xl font-bold mt-2">৳ 12,500</p>
-            </CardContent>
-          </Card>
-        </div>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto mt-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>Wallet Balance</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-xl font-semibold">${data?.walletBalance?.toFixed(2) ?? 0}</p>
+        </CardContent>
+      </Card>
 
-        {/* Recent Transactions */}
-        <Card className="rounded-2xl shadow">
-          <CardContent className="p-4">
-            <h2 className="text-xl font-semibold mb-4">Recent Transactions</h2>
-            <table className="w-full text-left">
-              <thead>
-                <tr className="border-b border-gray-300 dark:border-zinc-700 text-sm text-gray-600 dark:text-gray-300">
-                  <th className="py-2">User</th>
-                  <th>Type</th>
-                  <th>Amount</th>
-                  <th>Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="border-b border-gray-200 dark:border-zinc-700 hover:bg-gray-100 dark:hover:bg-zinc-800">
-                  <td className="py-3">Rahim</td>
-                  <td>Cash In</td>
-                  <td>৳ 2,000</td>
-                  <td>2025-11-13</td>
-                </tr>
-                <tr className="border-b border-gray-200 dark:border-zinc-700 hover:bg-gray-100 dark:hover:bg-zinc-800">
-                  <td className="py-3">Karim</td>
-                  <td>Withdraw</td>
-                  <td>৳ 500</td>
-                  <td>2025-11-10</td>
-                </tr>
-              </tbody>
-            </table>
-          </CardContent>
-        </Card>
-      </main>
+      <Card>
+        <CardHeader>
+          <CardTitle>Total Cash In</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-xl font-semibold">${data?.totalCashIn?.toFixed(2) ?? 0}</p>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Total Cash Out</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-xl font-semibold">${data?.totalCashOut?.toFixed(2) ?? 0}</p>
+        </CardContent>
+      </Card>
     </div>
   );
-}
+};
+
+export default AgentDashboard;

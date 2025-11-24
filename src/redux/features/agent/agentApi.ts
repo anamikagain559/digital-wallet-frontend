@@ -29,28 +29,32 @@ export const agentApi = baseApi.injectEndpoints({
 
     // -----------------------------
     // 3) Cash In (Agent → User)
-    // -----------------------------
+     // ⭐⭐⭐ NEW: Agent Cash-In
     agentCashIn: builder.mutation({
-      query: ({ agentId, userId, amount }) => ({
-        url: "/agent/cash-in",
+      query: (payload: { agentId: string; userId: string; amount: number }) => ({
+        url: "/wallet/agent/cash-in",
         method: "POST",
-        data: { agentId, userId, amount },
+        data: payload,
       }),
       invalidatesTags: ["WALLET", "TRANSACTIONS"],
     }),
 
-    // -----------------------------
-    // 4) Cash Out (Agent → User)
-    // -----------------------------
+
+    // ⭐⭐⭐ NEW: Agent Cash-Out
     agentCashOut: builder.mutation({
-      query: ({ agentId, userId, amount }) => ({
-        url: "/agent/cash-out",
+      query: (payload: { userId: string; amount: number }) => ({
+        url: "/wallet/agent/cash-out",
         method: "POST",
-        data: { agentId, userId, amount },
+        data: payload,
       }),
       invalidatesTags: ["WALLET", "TRANSACTIONS"],
     }),
-
+getMyWallet: builder.query({
+      query: () => ({
+        url: "/wallet/me",
+        method: "GET",
+      }),
+    }),
     // -----------------------------
     // 5) Commission History
     // -----------------------------
@@ -75,7 +79,17 @@ export const agentApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["USER"],
     }),
+    getAgentProfile: builder.query({
+  query: () => ({
+    url: "/agent/profile",
+    method: "GET",
   }),
+  
+  providesTags: ["USER"],
+  transformResponse: (response) => response.data,
+}),
+  }),
+  
 });
 
 export const {
@@ -85,4 +99,7 @@ export const {
   useAgentCashOutMutation,
   useGetCommissionHistoryQuery,
   useUpdateAgentProfileMutation,
+  useGetAgentProfileQuery,
+  useGetMyWalletQuery 
+
 } = agentApi;
