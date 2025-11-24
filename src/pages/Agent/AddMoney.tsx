@@ -19,9 +19,11 @@ import { cn } from "@/lib/utils";
 const MIN_CASHIN_AMOUNT = 50;
 
 export default function AddMoney({ className }: React.HTMLAttributes<HTMLDivElement>) {
-  const { data: userInfo } = useUserInfoQuery();
-  const currentUserId = userInfo?.data?._id;
-  const { data: walletData, isLoading: walletLoading, refetch } = useGetWalletQuery(currentUserId);
+  const { data } = useUserInfoQuery(undefined);
+
+  const currentUserId = data?.data?._id;
+  console.log("Current User ID:", currentUserId);
+  const { data: walletData, isLoading: walletLoading, refetch } = useGetWalletQuery(undefined);
   const balance = walletData?.data?.balance || 0;
 
   const [agentCashIn] = useAgentCashInMutation();
@@ -48,7 +50,7 @@ export default function AddMoney({ className }: React.HTMLAttributes<HTMLDivElem
     }
 
     try {
-      await agentCashIn({ amount, userId }).unwrap();
+      await agentCashIn({ amount, userId,  agentId: currentUserId,  }).unwrap();
       toast.success("Cash in successful ✅");
       form.reset();
       refetch(); // ✅ Refetch wallet data to update available balance

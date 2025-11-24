@@ -28,8 +28,8 @@ export const  walletApi= baseApi.injectEndpoints({
     }),
     
  getWallet: builder.query({
-  query: (userId: string) => ({
-    url: `/wallet/${userId}`,
+  query: () => ({
+    url: `/wallet/me`,
     method: "GET",
   }),
 }),
