@@ -1,9 +1,9 @@
 
 import AgentDashboard from "@/pages/Agent/AgentDashboard";
+import CashOut from "@/pages/Agent/Cashout";
 import Commissions from "@/pages/Agent/Commissions";
 import Profile from "@/pages/Agent/Profile";
 import Transactions from "@/pages/Agent/Transactions";
-import WithdrawMoney from "@/pages/Agent/WithdrawMoney";
 import type { ISidebarItem } from "@/types";
 import { lazy } from "react";
 
@@ -20,14 +20,14 @@ export const agentSidebarItems: ISidebarItem[] = [
       },
     
       {
-        title: "AddMoney",
+        title: "AgentCashIn",
         url: "/agent/add-money",
         component: AddMoney,
       },
           {
-        title: "Withdraw",
-        url: "/agent/withdraw-user",
-        component: WithdrawMoney,
+        title: "AgentCashOut",
+        url: "/agent/cashout-user",
+        component: CashOut ,
       },
           {
         title: "Commissions",

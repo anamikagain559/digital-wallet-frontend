@@ -1,66 +1,132 @@
-import { useState } from "react";
-import { useGetAgentTransactionsQuery } from "@/redux/features/agent/agentApi";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useState, useEffect } from "react";
+import { useGetMyTransactionsQuery } from "@/redux/features/transaction/transaction.api";
+import type { Transaction } from "@/redux/features/transaction/transaction.api";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { format } from "date-fns";
 
 export default function Transactions() {
-  const [filters, setFilters] = useState({
-    page: 1,
-    limit: 10,
-    q: "",
-    type: "",
+  const [page, setPage] = useState(1);
+  const [limit] = useState(5);
+  const [search, setSearch] = useState("");
+  const [typeFilter, setTypeFilter] = useState<string | undefined>(undefined);
+  const [startDate, setStartDate] = useState<string | undefined>(undefined);
+  const [endDate, setEndDate] = useState<string | undefined>(undefined);
+
+  const { data, isLoading } = useGetMyTransactionsQuery({
+    page,
+    limit,
+    type: typeFilter,
+    startDate,
+    endDate,
   });
 
-  const { data, isLoading } = useGetAgentTransactionsQuery(filters);
+  // Reset page when filters/search change
+  useEffect(() => {
+    setPage(1);
+  }, [typeFilter, startDate, endDate, search]);
+
+  if (isLoading) return <p>Loading...</p>;
+  if (!data || !data.data.length) return <p>No transactions found</p>;
+
+  const total = data.pagination.total;
+  const totalPages = Math.max(Math.ceil(total / limit), 1);
+
+  // Client-side search filter
+  let filtered = data.data;
+  if (search) {
+    filtered = filtered.filter((t) =>
+      t.description?.toLowerCase().includes(search.toLowerCase())
+    );
+  }
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-5 my-8">
-      <h1 className="text-xl font-semibold mb-4">All Transactions</h1>
-
-      {/* Filters */}
-      <div className="flex flex-wrap gap-4 mb-6">
+    <div className="space-y-4">
+      {/* Search & Filters */}
+      <div className="flex gap-2">
         <Input
-          placeholder="Search by user..."
-          value={filters.q}
-          onChange={(e) => setFilters({ ...filters, q: e.target.value })}
-          className="w-60"
+          placeholder="Search description..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
         />
 
-        <Select onValueChange={(v) => setFilters({ ...filters, type: v })}>
-          <SelectTrigger className="w-40">
-            <SelectValue placeholder="Type" />
+        <Select onValueChange={setTypeFilter}>
+          <SelectTrigger className="w-[150px]">
+            <SelectValue placeholder="Filter by type" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All</SelectItem>
-            <SelectItem value="cashin">Cash In</SelectItem>
-            <SelectItem value="cashout">Cash Out</SelectItem>
+            <SelectItem value="deposit">Deposit</SelectItem>
+            <SelectItem value="withdraw">Withdraw</SelectItem>
+            <SelectItem value="transfer">Transfer</SelectItem>
           </SelectContent>
         </Select>
+
+        <Input
+          type="date"
+          value={startDate}
+          onChange={(e) => setStartDate(e.target.value)}
+          placeholder="Start date"
+        />
+        <Input
+          type="date"
+          value={endDate}
+          onChange={(e) => setEndDate(e.target.value)}
+          placeholder="End date"
+        />
       </div>
 
       {/* Table */}
-      <div className="border rounded-md">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>User</TableHead>
-              <TableHead>Type</TableHead>
-              <TableHead>Amount</TableHead>
-              <TableHead>Date</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {data?.transactions?.map((tx: any) => (
-              <TableRow key={tx._id}>
-                <TableCell>{tx.userName}</TableCell>
-                <TableCell>{tx.type}</TableCell>
-                <TableCell>{tx.amount}৳</TableCell>
-                <TableCell>{tx.date}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+      <table className="w-full border">
+        <thead>
+          <tr className="bg-gray-100">
+            <th className="p-2 border">Type</th>
+            <th className="p-2 border">Amount</th>
+            <th className="p-2 border">Fee</th>
+            <th className="p-2 border">Status</th>
+            <th className="p-2 border">Description</th>
+            <th className="p-2 border">Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filtered.map((t: Transaction) => (
+            <tr key={t._id}>
+              <td className="p-2 border">{t.type}</td>
+              <td className="p-2 border">{t.amount}</td>
+              <td className="p-2 border">{t.fee}</td>
+              <td className="p-2 border">{t.status}</td>
+              <td className="p-2 border">{t.description || "-"}</td>
+              <td className="p-2 border">
+                {format(new Date(t.createdAt), "PPpp")}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* Pagination */}
+      <div className="flex justify-between mt-4">
+        <Button
+          disabled={page === 1}
+          onClick={() => setPage((prev) => prev - 1)}
+        >
+          Previous
+        </Button>
+        <p>
+          Page {page} of {totalPages}
+        </p>
+        <Button
+          disabled={page >= totalPages}
+          onClick={() => setPage((prev) => prev + 1)}
+        >
+          Next
+        </Button>
       </div>
     </div>
   );

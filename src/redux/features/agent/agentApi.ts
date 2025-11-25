@@ -2,34 +2,28 @@ import { baseApi } from "@/redux/baseApi";
 
 export const agentApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    // -----------------------------
-    // 1) Agent Overview
-    // -----------------------------
+
     getAgentOverview: builder.query({
       query: () => ({
-        url: "/agent/overview",
+        url: "/wallet/overview",
         method: "GET",
       }),
       providesTags: ["TRANSACTIONS", "WALLET"],
       transformResponse: (response) => response.data,
     }),
 
-    // -----------------------------
-    // 2) Agent Transactions (filterable + paginated)
-    // -----------------------------
+
     getAgentTransactions: builder.query({
       query: (params) => ({
         url: "/agent/transactions",
         method: "GET",
-        params, // example: { page, limit, q, type }
+        params, 
       }),
       providesTags: ["TRANSACTIONS"],
       transformResponse: (response) => response.data,
     }),
 
-    // -----------------------------
-    // 3) Cash In (Agent → User)
-     // ⭐⭐⭐ NEW: Agent Cash-In
+
     agentCashIn: builder.mutation({
       query: (payload: { agentId: string; userId: string; amount: number }) => ({
         url: "/wallet/agent/cash-in",
@@ -40,24 +34,22 @@ export const agentApi = baseApi.injectEndpoints({
     }),
 
 
-    // ⭐⭐⭐ NEW: Agent Cash-Out
+
     agentCashOut: builder.mutation({
-      query: (payload: { userId: string; amount: number }) => ({
+      query: (payload: { agentId: string; amount: number ; userId : string  }) => ({
         url: "/wallet/agent/cash-out",
         method: "POST",
         data: payload,
       }),
       invalidatesTags: ["WALLET", "TRANSACTIONS"],
     }),
-getMyWallet: builder.query({
-      query: () => ({
-        url: "/wallet/me",
-        method: "GET",
-      }),
-    }),
-    // -----------------------------
-    // 5) Commission History
-    // -----------------------------
+    getMyWallet: builder.query({
+          query: () => ({
+            url: "/wallet/me",
+            method: "GET",
+          }),
+        }),
+
     getCommissionHistory: builder.query({
       query: (params) => ({
         url: "/agent/commissions",
@@ -68,9 +60,7 @@ getMyWallet: builder.query({
       transformResponse: (response) => response.data,
     }),
 
-    // -----------------------------
-    // 6) Profile Update
-    // -----------------------------
+
     updateAgentProfile: builder.mutation({
       query: (payload) => ({
         url: "/agent/profile",
