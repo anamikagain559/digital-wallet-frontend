@@ -1,7 +1,7 @@
 import AddTour from "@/pages/Admin/AddTour";
 import AddTourType from "@/pages/Admin/AddTourType";
 import manageUser from "@/pages/Admin/manageUser";
-// import Analytics from "@/pages/Admin/Analytics";
+import AllTransactionsTable from "@/pages/Admin/AllTransactionsTable";
 import type { ISidebarItem } from "@/types";
 import { lazy } from "react";
 
@@ -37,9 +37,9 @@ export const adminSidebarItems: ISidebarItem[] = [
         component: AddTour,
       },
       {
-        title: "Habi Jabi",
-        url: "/admin/habijabi",
-        component: AddTour,
+        title: "allTransactions",
+        url: "/admin/all-transactions",
+        component: AllTransactionsTable ,
       },
     ],
   },

@@ -61,14 +61,6 @@ export const agentApi = baseApi.injectEndpoints({
     }),
 
 
-    updateAgentProfile: builder.mutation({
-      query: (payload) => ({
-        url: "/agent/profile",
-        method: "PUT",
-        data: payload,
-      }),
-      invalidatesTags: ["USER"],
-    }),
     getAgentProfile: builder.query({
   query: () => ({
     url: "/agent/profile",
@@ -88,7 +80,7 @@ export const {
   useAgentCashInMutation,
   useAgentCashOutMutation,
   useGetCommissionHistoryQuery,
-  useUpdateAgentProfileMutation,
+
   useGetAgentProfileQuery,
   useGetMyWalletQuery 
 
