@@ -1,67 +1,115 @@
-import { DeleteConfirmation } from "@/components/DeleteConfirmation";
-import { AddTourTypeModal } from "@/components/modules/Admin/TourType/AddTourModal";
+
+import { useGetAllUserQuery, useUpdateUserMutation } from "@/redux/features/user/user.api";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { useGetAllUserQuery } from "@/redux/features/user/user.api";
-import { Trash2 } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { toast } from "sonner";
 
-function ManageUser() {
-  const { data, isLoading, error } = useGetAllUserQuery(undefined);
-
-  if (isLoading) {
-    return <p>Loading users...</p>;
+export default function ManageUser() {
+  const { data: users, isLoading } = useGetAllUserQuery();
+  const [updateUser] = useUpdateUserMutation();
+const handleAction = async (
+  id: string | number,
+  payload: { isActive: string }
+): Promise<void> => {
+  try {
+    await updateUser({ id, data: payload }).unwrap();
+    toast.success("Updated Successfully");
+  } catch {
+    toast.error("Update Failed");
   }
+};
 
-  if (error) {
-    return <p className="text-red-500">Failed to load users.</p>;
-  }
-  const handleDeleteUser = (userId: string) => {
-    console.log("Deleting user:", userId);
-    // call your delete API here (mutation)
-  };
+ const filteredUsers = users.users?.filter(u => u.role === "USER");
+  const filteredAgents = users?.filter((u) => u.role === "AGENT");
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-5">
-      <div className="flex justify-between my-8">
-        <h1 className="text-xl font-semibold">Manage Users</h1>
-        <AddTourTypeModal />
-      </div>
-      <div className="border border-muted rounded-md">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[100px]">Name</TableHead>
-              <TableHead className="text-right">Action</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {data?.data?.map((item: { _id: string; name: string }) => (
-              <TableRow key={item._id}>
-                <TableCell className="font-medium w-full">
-                  {item?.name}
-                </TableCell>
-                <TableCell className="text-right">
-                  <DeleteConfirmation onConfirm={() => handleDeleteUser(item?._id)}>
-                  <Button size="sm" variant="destructive">
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
-                  </DeleteConfirmation>
-                </TableCell>
+    <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+      <Card className="shadow-lg">
+        <CardHeader>
+          <CardTitle className="text-xl font-bold">Manage Users</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {isLoading ? (
+            <p>Loading users...</p>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Email</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Action</TableHead>
+                </TableRow>
+              </TableHeader>
 
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+              <TableBody>
+                {filteredUsers?.map((user) => (
+                  <TableRow key={user._id}>
+                    <TableCell>{user.name}</TableCell>
+                    <TableCell>{user.email}</TableCell>
+                    <TableCell>{user.isActive}</TableCell>
+                    <TableCell>
+                      {user.isActive === "ACTIVE" ? (
+                        <Button variant="destructive" onClick={() => handleAction(user._id, { isActive: "BLOCKED" })}>
+                          Block
+                        </Button>
+                      ) : (
+                        <Button onClick={() => handleAction(user._id, { isActive: "ACTIVE" })}>
+                          Unblock
+                        </Button>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </CardContent>
+      </Card>
+
+      <Card className="shadow-lg">
+        <CardHeader>
+          <CardTitle className="text-xl font-bold">Manage Agents</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {isLoading ? (
+            <p>Loading agents...</p>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Email</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Action</TableHead>
+                </TableRow>
+              </TableHeader>
+
+              <TableBody>
+                {filteredAgents?.map((agent) => (
+                  <TableRow key={agent._id}>
+                    <TableCell>{agent.name}</TableCell>
+                    <TableCell>{agent.email}</TableCell>
+                    <TableCell>{agent.isActive}</TableCell>
+                    <TableCell>
+                      {agent.isActive === "ACTIVE" ? (
+                        <Button variant="destructive" onClick={() => handleAction(agent._id, { isActive: "SUSPENDED" })}>
+                          Suspend
+                        </Button>
+                      ) : (
+                        <Button onClick={() => handleAction(agent._id, { isActive: "ACTIVE" })}>
+                          Approve
+                        </Button>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }
-
-export default ManageUser;

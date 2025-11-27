@@ -17,4 +17,15 @@ export interface ISidebarItem {
     component: ComponentType;
   }[];
 }
+export type TUser = {
+  _id: string;
+  name: string;
+  email: string;
+  role: "ADMIN" | "USER" | "AGENT";
+  isDeleted: boolean;
+  isActive: "ACTIVE" | "BLOCKED" | "SUSPENDED";
+  isVerified: boolean;
+  createdAt: string;
+  updatedAt: string;
+};
 export type TRole = "ADMIN" | "AGENT" | "USER";
