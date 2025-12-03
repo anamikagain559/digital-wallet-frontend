@@ -1,14 +1,20 @@
 import { baseApi } from "@/redux/baseApi";
-import type { TUser } from "@/types";
+
 export const userApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    GetAllUser: builder.query<TUser[], void>({
-      query: () => ({
-        url: "/user/all-users",
-        method: "GET", // change to POST if your backend requires it
-      }),
-      providesTags: ["USER"],
-    }),
+   GetAllUser: builder.query({
+  query: () => ({
+    url: "/user/all-users",
+    method: "GET",
+  }),
+  transformResponse: (response) => {
+    return {
+      users: response.data,
+      meta: response.meta,
+    };
+  },
+  providesTags: ["USER"],
+}),
     updateUser: builder.mutation({
     query: ({ id, data }) => ({
       url: `/user/${id}`,
@@ -16,7 +22,15 @@ export const userApi = baseApi.injectEndpoints({
       body: data,
     }),
   }),
+  deleteUser: builder.mutation({
+  query: (id) => ({
+    url: `/user/${id}`,
+    method: "DELETE",
+  }),
+  invalidatesTags: ["USER"],
+}),
+
   }),
 });
 
-export const { useGetAllUserQuery ,useUpdateUserMutation} = userApi;
+export const { useGetAllUserQuery ,useUpdateUserMutation ,useDeleteUserMutation} = userApi;
