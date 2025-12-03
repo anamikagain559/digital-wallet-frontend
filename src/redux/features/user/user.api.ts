@@ -15,13 +15,27 @@ export const userApi = baseApi.injectEndpoints({
   },
   providesTags: ["USER"],
 }),
+
+
+
+
+ blockOrUnblockUser: builder.mutation({
+      query: ({ id, status }) => ({
+        url: `/user/block-unblock/${id}`,
+        method: "PATCH",
+        data: { isActive: status },
+      }),
+      invalidatesTags: ["USER"],
+    }),
+
     updateUser: builder.mutation({
     query: ({ id, data }) => ({
       url: `/user/${id}`,
       method: "PATCH",
-      body: data,
+      data: data,
     }),
   }),
+  
   deleteUser: builder.mutation({
   query: (id) => ({
     url: `/user/${id}`,
@@ -31,6 +45,7 @@ export const userApi = baseApi.injectEndpoints({
 }),
 
   }),
+  
 });
 
-export const { useGetAllUserQuery ,useUpdateUserMutation ,useDeleteUserMutation} = userApi;
+export const { useGetAllUserQuery ,useUpdateUserMutation ,useDeleteUserMutation,useBlockOrUnblockUserMutation} = userApi;
