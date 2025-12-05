@@ -33,7 +33,7 @@ export const userApi = baseApi.injectEndpoints({
       url: `/user/${id}`,
       method: "PATCH",
       data: data,
-    }),
+    }), invalidatesTags: ["USER"],
   }),
       approveAgent: builder.mutation({
       query: (id: string) => ({
@@ -59,9 +59,15 @@ export const userApi = baseApi.injectEndpoints({
   }),
   invalidatesTags: ["USER"],
 }),
+getAdminOverview: builder.query({
+      query: () => ({
+        url: "/user/admin/overview",
+        method: "GET",
+      }),
+    }),
 
   }),
   
 });
 
-export const { useGetAllUserQuery ,useUpdateUserMutation ,useDeleteUserMutation,useBlockOrUnblockUserMutation,useApproveAgentMutation,useSuspendAgentMutation} = userApi;
+export const { useGetAllUserQuery ,useUpdateUserMutation ,useDeleteUserMutation,useBlockOrUnblockUserMutation,useApproveAgentMutation,useSuspendAgentMutation,useGetAdminOverviewQuery} = userApi;

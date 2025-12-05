@@ -6,21 +6,21 @@ import { lazy } from "react";
 import AgentManagement from "@/pages/Admin/AgentManagement";
 import Profile from "@/pages/Admin/Profile";
 
-const Analytics = lazy(() => import("@/pages/Admin/Analytics"));
+const AdminOverview = lazy(() => import("@/pages/Admin/AdminOverview"));
 
 export const adminSidebarItems: ISidebarItem[] = [
   {
     title: "Dashboard",
     items: [
       {
-        title: "Analytics",
+        title: "AdminOverview",
         url: "/admin/analytics",
-        component: Analytics,
+        component: AdminOverview,
       },
     ],
   },
   {
-    title: "Tour Management",
+    title: "Dashboard Management",
     items: [
       {
         title: " User Management",
@@ -32,11 +32,6 @@ export const adminSidebarItems: ISidebarItem[] = [
         url: "/admin/agent-management",
         component: AgentManagement,
       },
-           {
-        title: "remove Tour",
-        url: "/admin/add-tour-type",
-        component: AddTourType,
-      },
     
       {
         title: "allTransactions",
@@ -44,7 +39,7 @@ export const adminSidebarItems: ISidebarItem[] = [
         component: AllTransactionsTable ,
       },
         {
-        title: "Profile Management",
+        title: "Profile",
         url: "/admin/profile-management",
         component: Profile,
       },

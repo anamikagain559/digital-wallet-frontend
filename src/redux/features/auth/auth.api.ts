@@ -46,15 +46,15 @@ export const authApi = baseApi.injectEndpoints({
       }),
       providesTags: ["USER"],
     }),
-    updateProfile: builder.mutation({
-      query: (data) => ({
-        url: "/user/update-profile",
-        method: "PUT",
-        data,
+    updateUser: builder.mutation({
+      query: ({ id, data }) => ({
+        url: `/user/${id}`,
+        method: "PATCH",
+        data: data,
       }),
-      invalidatesTags: ["USER"],
+      invalidatesTags: ["USER"],  // optional
     }),
-    
+
     changePassword: builder.mutation({
       query: (data) => ({
         url: "/auth/reset-password",
@@ -72,5 +72,5 @@ export const {
   useVerifyOtpMutation,
   useUserInfoQuery,
   useLogoutMutation,
-    useUpdateProfileMutation, useChangePasswordMutation,
+    useUpdateUserMutation , useChangePasswordMutation,
 } = authApi;
