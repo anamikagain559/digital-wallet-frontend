@@ -145,7 +145,7 @@ console.log("Profile updated:", { name, email });
           <Button
             variant="outline"
             className="w-full"
-            onClick={() => navigate("/change-password")}
+            onClick={() => navigate("/admin/change-password")}
           >
             Change Password
           </Button>

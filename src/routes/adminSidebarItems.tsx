@@ -5,6 +5,7 @@ import type { ISidebarItem } from "@/types";
 import { lazy } from "react";
 import AgentManagement from "@/pages/Admin/AgentManagement";
 import Profile from "@/pages/Admin/Profile";
+import ChangePassword from "@/pages/Admin/ChangePassword";
 
 const AdminOverview = lazy(() => import("@/pages/Admin/AdminOverview"));
 
@@ -40,9 +41,14 @@ export const adminSidebarItems: ISidebarItem[] = [
       },
         {
         title: "Profile",
-        url: "/admin/profile-management",
+        url: "/admin/profile",
         component: Profile,
       },
+      {
+        title: "change-password",
+        url: "/admin/change-password",
+        component: ChangePassword,
+      }
     ],
   },
 ];
