@@ -1,14 +1,21 @@
+import ChangePassword from "@/pages/User/ChangePassword";
 import Deposites from "@/pages/User/Deposits";
 import Profile from "@/pages/User/Profile";
 import Send from "@/pages/User/Send";
 import Transactions from "@/pages/User/Transactions";
+import WalletOverview from "@/pages/User/WalletOverview";
 import Withdraw from "@/pages/User/Withdraw";
 import type { ISidebarItem } from "@/types";
 
 export const userSidebarItems: ISidebarItem[] = [
   {
     title: "History",
-    items: [
+    items: [{
+       title: "Overview User",
+        url: "/user/overview",
+        component: WalletOverview ,
+    }
+      ,
       {
         title: "Deposits",
         url: "/user/deposits",
@@ -34,6 +41,11 @@ export const userSidebarItems: ISidebarItem[] = [
         url: "/user/profile",
         component: Profile,
       },
+      {
+        title: "change-password",
+        url: "/user/change-password",
+        component: ChangePassword,
+      }
     ],
   },
 ];

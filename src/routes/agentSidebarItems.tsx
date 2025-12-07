@@ -1,6 +1,7 @@
 
 import AgentDashboard from "@/pages/Agent/AgentDashboard";
 import CashOut from "@/pages/Agent/CashOut";
+import ChangePassword from "@/pages/Agent/ChangePassword";
 import Commissions from "@/pages/Agent/Commissions";
 import Profile from "@/pages/Agent/Profile";
 import Transactions from "@/pages/Agent/Transactions";
@@ -30,11 +31,6 @@ export const agentSidebarItems: ISidebarItem[] = [
         component: CashOut ,
       },
           {
-        title: "Commissions",
-        url: "/agent/commissions",
-        component: Commissions,
-      },
-          {
         title: "Transactions",
         url: "/agent/transactions",
         component: Transactions,
@@ -44,6 +40,11 @@ export const agentSidebarItems: ISidebarItem[] = [
         url: "/agent/profile",
         component: Profile,
       },
+      {
+        title: "change-password",
+        url: "/agent/change-password",
+        component: ChangePassword,
+      }
     ],
   },
 ];

@@ -27,12 +27,18 @@ export const  walletApi= baseApi.injectEndpoints({
       invalidatesTags: ["WALLET", "TRANSACTIONS"],
     }),
     
- getWallet: builder.query({
+getWallet: builder.query({
   query: () => ({
     url: `/wallet/me`,
     method: "GET",
   }),
 }),
+ getWalletOverview: builder.query({
+      query: () => ({
+        url: "/wallet/overview",
+        method: "GET",
+      }),
+    }),
     }),
 });
 

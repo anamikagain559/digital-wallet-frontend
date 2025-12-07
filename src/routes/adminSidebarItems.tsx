@@ -1,4 +1,3 @@
-import AddTourType from "@/pages/Admin/AddTourType";
 import manageUser from "@/pages/Admin/manageUser";
 import AllTransactionsTable from "@/pages/Admin/AllTransactionsTable";
 import type { ISidebarItem } from "@/types";
