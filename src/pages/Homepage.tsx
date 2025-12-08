@@ -5,9 +5,16 @@ import SkeletonCard from "@/components/SkeletonCard";
 import { fakeFetchFeatures } from "@/utils/fakeApi";
 import { FaPiggyBank, FaCreditCard, FaChartLine, FaUmbrella } from "react-icons/fa";
 import React from "react";
+
+interface Feature {
+  id: number;
+  title: string;
+  desc: string;
+}
+
 function Homepage() {
     const [loading, setLoading] = React.useState(true);
-  const [features, setFeatures] = React.useState<any[]>([]);
+  const [features, setFeatures] = React.useState<Feature[]>([]);
 
   React.useEffect(() => {
     fakeFetchFeatures().then((res) => {

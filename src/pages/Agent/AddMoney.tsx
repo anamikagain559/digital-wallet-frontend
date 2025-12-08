@@ -78,7 +78,7 @@ export default function AddMoney({ className }: React.HTMLAttributes<HTMLDivElem
           <FormField
             control={form.control}
             name="userId"
-            render={({ field }) => (
+            render={() => (
               <FormItem>
                 <FormLabel>User ID</FormLabel>
                 <FormControl>

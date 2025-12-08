@@ -2,7 +2,6 @@
 import AgentDashboard from "@/pages/Agent/AgentDashboard";
 import CashOut from "@/pages/Agent/CashOut";
 import ChangePassword from "@/pages/Agent/ChangePassword";
-import Commissions from "@/pages/Agent/Commissions";
 import Profile from "@/pages/Agent/Profile";
 import Transactions from "@/pages/Agent/Transactions";
 import type { ISidebarItem } from "@/types";

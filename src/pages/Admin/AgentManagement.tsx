@@ -12,8 +12,8 @@ import { toast } from "sonner";
   
     const { data: usersData, isLoading } = useGetAllUserQuery(undefined);
 
-  const [approveAgent, { isLoading: approving }] = useApproveAgentMutation();
-  const [suspendAgent, { isLoading: suspending }] = useSuspendAgentMutation();
+  const [approveAgent] = useApproveAgentMutation();
+  const [suspendAgent] = useSuspendAgentMutation();
 
   const [approvingId, setApprovingId] = useState<string | null>(null);
   const [suspendingId, setSuspendingId] = useState<string | null>(null);

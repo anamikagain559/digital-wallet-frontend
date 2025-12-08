@@ -59,8 +59,21 @@ console.log("Profile updated:", { name, email });
       await refetch();
 
       toast.success("Profile updated successfully!");
-    } catch (error: any) {
-      toast.error(error?.data?.message || "Failed to update profile.");
+    } catch (error: unknown) {
+      let message = "Failed to update profile.";
+
+      if (error instanceof Error) {
+        message = error.message;
+      } else if (typeof error === "object" && error !== null) {
+        const err = error as { data?: { message?: string } };
+        if (err.data?.message) {
+          message = err.data.message;
+        }
+      } else if (typeof error === "string") {
+        message = error;
+      }
+
+      toast.error(message);
     }
   };
 

@@ -18,7 +18,9 @@ const AgentDashboard: React.FC = () => {
   }
 
   if (isError) {
-    return <p className="text-red-500 text-center">Error loading overview: {(error as any)?.data?.message || "Unknown error"}</p>;
+    type ApiError = { data?: { message?: string }; message?: string } | undefined;
+    const errMsg = (error as ApiError)?.data?.message ?? (error as ApiError)?.message ?? "Unknown error";
+    return <p className="text-red-500 text-center">Error loading overview: {errMsg}</p>;
   }
 
   return (
@@ -61,7 +63,7 @@ const AgentDashboard: React.FC = () => {
             <p>Loading...</p>
           ) : transactions?.data?.length ? (
             <div className="space-y-3">
-              {transactions.data.slice(0, 5).map((tx: any) => (
+              {transactions.data.slice(0, 5).map((tx) => (
                 <div
                   key={tx._id}
                   className="flex justify-between items-center border-b pb-2"

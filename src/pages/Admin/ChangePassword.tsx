@@ -15,6 +15,17 @@ export default function ChangePassword() {
 
   const [resetPassword, { isLoading }] = useChangePasswordMutation();
 
+  const getErrorMessage = (err: unknown) => {
+    if (typeof err === "string") return err;
+    if (err && typeof err === "object") {
+      const e = err as Record<string, unknown>;
+      const data = e.data as Record<string, unknown> | undefined;
+      if (data && typeof data.message === "string") return data.message;
+      if (typeof e.message === "string") return e.message;
+    }
+    return "Failed to change password";
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -28,10 +39,8 @@ export default function ChangePassword() {
 
       toast.success("Password changed successfully!");
       navigate("/admin/profile");
-
-
-    } catch (error: any) {
-      toast.error(error?.data?.message || "Failed to change password");
+    } catch (error: unknown) {
+      toast.error(getErrorMessage(error));
     }
   };
 

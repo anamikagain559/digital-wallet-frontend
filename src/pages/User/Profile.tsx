@@ -46,22 +46,30 @@ export default function Profile() {
       return;
     }
 
-    try {
-      await updateUser({
-        id: user._id,
-        data: {
-          name,
-          email,
-        },
-      }).unwrap();
-console.log("Profile updated:", { name, email });
-      // Fetch updated info
-      await refetch();
+try {
+  await updateUser({
+    id: user._id,
+    data: {
+      name,
+      email,
+    },
+  }).unwrap();
+  console.log("Profile updated:", { name, email });
+  // Fetch updated info
+  await refetch();
 
-      toast.success("Profile updated successfully!");
-    } catch (error: any) {
-      toast.error(error?.data?.message || "Failed to update profile.");
-    }
+  toast.success("Profile updated successfully!");
+} catch (error: unknown) {
+  // Safely extract a message from an unknown error shape
+  if (typeof error === "object" && error !== null && "data" in error) {
+    const err = error as { data?: { message?: string } };
+    toast.error(err.data?.message || "Failed to update profile.");
+  } else if (error instanceof Error) {
+    toast.error(error.message || "Failed to update profile.");
+  } else {
+    toast.error("Failed to update profile.");
+  }
+}
   };
 
   // Loading state

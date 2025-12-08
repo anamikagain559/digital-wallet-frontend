@@ -22,13 +22,28 @@ export default function ManageUser() {
   const { data: users, isLoading } = useGetAllUserQuery(undefined);
 const [blockOrUnblockUser] = useBlockOrUnblockUserMutation();
 
-  const [viewUser, setViewUser] = useState<any>(null);
-  const [confirmAction, setConfirmAction] = useState<any>(null);
+  // Define a minimal User type for this component
+  type User = {
+    _id: string;
+    name: string;
+    email: string;
+    role: string;
+    isActive: "ACTIVE" | "BLOCKED" | string;
+  };
 
-  const filteredUsers =
-    users?.users?.filter((u: any) => u.role === "USER") ?? [];
+  // Define a type for confirm action modal data
+  type ConfirmAction = {
+    message: string;
+    user: User | null;
+  };
 
- const handleStatusChange = async (user) => {
+  const [viewUser, setViewUser] = useState<User | null>(null);
+  const [confirmAction, setConfirmAction] = useState<ConfirmAction | null>(null);
+
+  const filteredUsers: User[] =
+    users?.users?.filter((u: User) => u.role === "USER") ?? [];
+
+ const handleStatusChange = async (user: User) => {
   const newStatus = user.isActive === "ACTIVE" ? "BLOCKED" : "ACTIVE";
 
   try {
@@ -64,7 +79,7 @@ const [blockOrUnblockUser] = useBlockOrUnblockUserMutation();
               </TableHeader>
 
               <TableBody>
-                {filteredUsers.map((user: any) => (
+                {filteredUsers.map((user: User) => (
                   <TableRow key={user._id}>
                     <TableCell>{user.name}</TableCell>
                     <TableCell>{user.email}</TableCell>
@@ -142,7 +157,7 @@ const [blockOrUnblockUser] = useBlockOrUnblockUserMutation();
                   Cancel
                 </Button>
 
-                <Button onClick={handleStatusChange}>Yes, Confirm</Button>
+                <Button onClick={() => confirmAction?.user && handleStatusChange(confirmAction.user)}>Yes, Confirm</Button>
               </div>
             </div>
           )}

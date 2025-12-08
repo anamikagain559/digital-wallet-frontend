@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useGetWalletQuery } from "@/redux/features/wallet/wallet.api";
 import { useGetMyTransactionsQuery } from "@/redux/features/transaction/transaction.api";
-import { ArrowDown, ArrowUp, Send, Wallet } from "lucide-react";
+import { ArrowDown, ArrowUp, Send, Wallet, } from "lucide-react";
 import { Link } from "react-router";
 const WalletOverview = () => {
   const { data: overview, isLoading: loadingOverview } = useGetWalletQuery(undefined);
@@ -86,7 +86,7 @@ const WalletOverview = () => {
             <p>Loading...</p>
           ) : transactions?.data?.length ? (
             <div className="space-y-3">
-              {transactions.data.slice(0, 5).map((tx: any) => (
+              {transactions.data.slice(0, 5).map((tx) => (
                 <div
                   key={tx._id}
                   className="flex justify-between items-center border-b pb-2"

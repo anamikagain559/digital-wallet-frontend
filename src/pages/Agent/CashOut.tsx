@@ -55,8 +55,19 @@ export default function CashOut({ className }: React.HTMLAttributes<HTMLDivEleme
       toast.success("Cash out successful ✅");
       form.reset();
       refetch(); 
-    } catch (err: any) {
-      toast.error(err?.data?.message || "Cash out failed ❌");
+    } catch (err: unknown) {
+      let message = "Cash out failed ❌";
+
+      if (err instanceof Error) {
+        message = err.message;
+      } else if (typeof err === "object" && err !== null && "data" in err) {
+        const maybeMessage = (err as { data?: { message?: string } })?.data?.message;
+        if (typeof maybeMessage === "string") {
+          message = maybeMessage;
+        }
+      }
+
+      toast.error(message);
     }
   };
 
@@ -79,7 +90,7 @@ export default function CashOut({ className }: React.HTMLAttributes<HTMLDivEleme
           <FormField
             control={form.control}
             name="userId"
-            render={({ field }) => (
+            render={() => (
               <FormItem>
                 <FormLabel>User ID</FormLabel>
                 <FormControl>

@@ -30,8 +30,9 @@ export default function ChangePassword() {
       navigate("/agent/profile");
 
 
-    } catch (error: any) {
-      toast.error(error?.data?.message || "Failed to change password");
+    } catch (error: unknown) {
+      const err = error as { data?: { message?: string }; message?: string } | undefined;
+      toast.error(err?.data?.message || err?.message || "Failed to change password");
     }
   };
 

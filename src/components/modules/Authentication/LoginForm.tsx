@@ -41,11 +41,15 @@ export function LoginForm({
     } catch (err) {
       console.error(err);
 
-      if (err.data.message === "Password does not match") {
+      type ApiError = { data?: { message?: string }; message?: string };
+      const error = err as ApiError;
+      const message = error.data?.message ?? error.message ?? String(err);
+
+      if (message === "Password does not match") {
         toast.error("Invalid credentials");
       }
 
-      if (err.data.message === "User is not verified") {
+      if (message === "User is not verified") {
         toast.error("Your account is not verified");
         navigate("/verify", { state: data.email });
       }

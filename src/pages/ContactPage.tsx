@@ -1,4 +1,4 @@
-import React from "react";
+
 import ContactForm from "@/components/modules/ContactPage/ContactForm";
 
 export default function ContactPage() {

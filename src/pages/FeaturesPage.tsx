@@ -1,4 +1,4 @@
-import React from "react";
+
 import FeatureCard from "@/components/modules/HomePage/FeatureCard";
 
 export default function FeaturesPage() {
