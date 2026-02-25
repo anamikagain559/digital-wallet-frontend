@@ -74,6 +74,14 @@ export const router = createBrowserRouter([
       ...generateRoutes(agentSidebarItems),
     ],
   },
+    {
+    Component: withAuth(DashboardLayout, role.agent as TRole),
+    path: "/agent",
+    children: [
+      { index: true, element: <Navigate to="/agent/add-money" /> },
+      ...generateRoutes(agentSidebarItems),
+    ],
+  },
   {
     Component: Login,
     path: "/login",

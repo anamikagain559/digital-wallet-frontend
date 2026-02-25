@@ -8,28 +8,28 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import config from "@/config";
 import { cn } from "@/lib/utils";
 import { useLoginMutation } from "@/redux/features/auth/auth.api";
-import {  useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import type { FieldValues, SubmitHandler } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
-import {  toast } from "react-hot-toast";
+import { toast } from "react-hot-toast";
 
 export function LoginForm({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
   const navigate = useNavigate();
+
   const form = useForm({
-    //! For development only
     defaultValues: {
       email: "super@gmail.com",
       password: "12345678",
     },
   });
-  // console.log(form.formState.errors);
+
   const [login] = useLoginMutation();
+
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     try {
       const res = await login(data).unwrap();
@@ -57,78 +57,90 @@ export function LoginForm({
   };
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <div className="flex flex-col items-center gap-2 text-center">
-        <h1 className="text-2xl font-bold">Login to your account</h1>
-        <p className="text-balance text-sm text-muted-foreground">
-          Enter your email below to login to your account
+    <div
+      className={cn(
+        "w-full flex flex-col gap-6",
+        className
+      )}
+      {...props}
+    >
+      {/* Header */}
+      <div className="flex flex-col items-center gap-1 text-center">
+        <h1 className="text-3xl font-bold text-blue-900">Welcome Back</h1>
+        <p className="text-sm text-gray-600">
+          Login to access your PocketBD wallet
         </p>
       </div>
-      <div className="grid gap-6">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="john@example.com"
-                      {...field}
-                      value={field.value || ""}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
 
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="password"
-                      placeholder="********"
-                      {...field}
-                      value={field.value || ""}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+      {/* Form */}
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="font-medium text-gray-700">
+                  Email Address
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="john@example.com"
+                    className="h-11 rounded-lg border-gray-300 
+                    focus:ring-2 focus:ring-blue-500"
+                    {...field}
+                    value={field.value || ""}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-            <Button type="submit" className="w-full">
-              Login
-            </Button>
-          </form>
-        </Form>
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="font-medium text-gray-700">Password</FormLabel>
+                <FormControl>
+                  <Input
+                    type="password"
+                    placeholder="********"
+                    className="h-11 rounded-lg border-gray-300 
+                    focus:ring-2 focus:ring-blue-500"
+                    {...field}
+                    value={field.value || ""}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
-          <span className="relative z-10 bg-background px-2 text-muted-foreground">
-            Or continue with
-          </span>
-        </div>
+          {/* Submit Button */}
+          <Button
+            type="submit"
+            className="w-full h-11 rounded-lg text-base bg-blue-600 
+            hover:bg-blue-700 transition-all duration-200 shadow-md hover:shadow-lg"
+          >
+            Login
+          </Button>
+        </form>
+      </Form>
 
-        {/*//* http://localhost:5000/api/v1/auth/google */}
-        <Button
-          onClick={() => window.open(`${config.baseUrl}/auth/google`)}
-          type="button"
-          variant="outline"
-          className="w-full cursor-pointer"
-        >
-          Login with Google
-        </Button>
+      {/* Divider */}
+      <div className="relative my-2 text-center">
+        <span className="relative z-10 bg-white px-3 text-sm text-gray-600">
+          Or continue with
+        </span>
+        <div className="absolute inset-0 top-1/2 border-t border-gray-300"></div>
       </div>
+
+      {/* Footer */}
       <div className="text-center text-sm">
-        Don&apos;t have an account?{" "}
-        <Link to="/register" replace className="underline underline-offset-4">
+        Don’t have an account?{" "}
+        <Link to="/register" className="text-blue-600 font-medium hover:underline">
           Register
         </Link>
       </div>
