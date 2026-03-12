@@ -21,7 +21,7 @@ export default function Logo() {
 
   <circle cx="42" cy="34" r="4" fill="white" opacity="0.95"/>
 
-  <text x="90" y="42" font-size="32" font-family="Poppins, Inter, sans-serif" font-weight="700" fill="#27f777af" letter-spacing="0.5">
+  <text x="90" y="42" font-size="32" font-family="Poppins, Inter, sans-serif" font-weight="700" fill="#1e293b" letter-spacing="0.5">
     Pocket<tspan fill="url(#lux1)">BD</tspan>
   </text>
 </svg>

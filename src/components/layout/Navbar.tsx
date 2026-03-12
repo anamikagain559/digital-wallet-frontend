@@ -1,18 +1,7 @@
 import Logo from "@/assets/icons/Logo";
 import { Button } from "@/components/ui/button";
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-} from "@/components/ui/navigation-menu";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { ModeToggle } from "./ModeToggler";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 import {
   authApi,
   useLogoutMutation,
@@ -20,139 +9,159 @@ import {
 } from "@/redux/features/auth/auth.api";
 import { useAppDispatch } from "@/redux/hook";
 import { role } from "@/constants/role";
+import { motion, AnimatePresence } from "framer-motion";
+import { Menu, X, LogOut, LayoutDashboard } from "lucide-react";
+import React from "react";
 
-// Navigation links array to be used in both desktop and mobile menus
 const navigationLinks = [
-  { href: "/", label: "Home", role: "PUBLIC" },
-  { href: "/about", label: "About", role: "PUBLIC" },
-  { href: "/features", label: "Features", role: "PUBLIC" },
-  { href: "/pricing", label: "Pricing", role: "PUBLIC" },
-  { href: "/contact", label: "Contact", role: "PUBLIC" },
-  { href: "/faq", label: "FAQ", role: "PUBLIC" }, 
-  { href: "/admin", label: "Dashboard", role: role.admin },
-  { href: "/agent", label: "Dashboard", role: role.agent },
-  { href: "/user", label: "Dashboard", role: role.user },
+  { href: "#", label: "Personal", role: "PUBLIC", hasDropdown: true },
+  { href: "#", label: "Business", role: "PUBLIC" },
+  { href: "#", label: "Developers", role: "PUBLIC" },
+  { href: "#", label: "Help", role: "PUBLIC" },
 ];
 
 export default function Navbar() {
   const { data } = useUserInfoQuery(undefined);
   const [logout] = useLogoutMutation();
   const dispatch = useAppDispatch();
+  const location = useLocation();
+  const [isOpen, setIsOpen] = React.useState(false);
 
   const handleLogout = async () => {
     await logout(undefined);
     dispatch(authApi.util.resetApiState());
   };
 
+  const activeLink = (path: string) => location.pathname === path;
+
   return (
-  <header className="border-b  sticky top-0 z-50 bg-black backdrop-blur shadow-sm">
-      <div className="container mx-auto px-4 flex h-16 items-center justify-between gap-4">
-        {/* Left side */}
-        <div className="flex items-center gap-2">
-          {/* Mobile menu trigger */}
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                className="group size-8 md:hidden"
-                variant="ghost"
-                size="icon"
-              >
-                <svg
-                  className="pointer-events-none"
-                  width={16}
-                  height={16}
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M4 12L20 12"
-                    className="origin-center -translate-y-[7px] transition-all duration-300 ease-[cubic-bezier(.5,.85,.25,1.1)] group-aria-expanded:translate-x-0 group-aria-expanded:translate-y-0 group-aria-expanded:rotate-[315deg]"
-                  />
-                  <path
-                    d="M4 12H20"
-                    className="origin-center transition-all duration-300 ease-[cubic-bezier(.5,.85,.25,1.8)] group-aria-expanded:rotate-45"
-                  />
-                  <path
-                    d="M4 12H20"
-                    className="origin-center translate-y-[7px] transition-all duration-300 ease-[cubic-bezier(.5,.85,.25,1.1)] group-aria-expanded:translate-y-0 group-aria-expanded:rotate-[135deg]"
-                  />
-                </svg>
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent align="start" className="w-36 p-1 md:hidden">
-              <NavigationMenu className="max-w-none *:w-full">
-                <NavigationMenuList className="flex-col items-start gap-0 md:gap-2">
-                  {navigationLinks.map((link, index) => (
-                    <NavigationMenuItem key={index} className="w-full">
-                      <NavigationMenuLink asChild className="py-1.5">
-                        <Link to={link.href}>{link.label} </Link>
-                      </NavigationMenuLink>
-                    </NavigationMenuItem>
-                  ))}
-                </NavigationMenuList>
-              </NavigationMenu>
-            </PopoverContent>
-          </Popover>
-          {/* Main nav */}
-          <div className="flex items-center gap-6">
-            <a href="#" className="text-primary hover:text-primary/90">
+    <header className="sticky top-0 z-50 w-full px-6 py-4 pointer-events-none">
+      <nav className="container mx-auto max-w-7xl pointer-events-auto">
+        <div className="relative flex items-center justify-between h-16 px-8 bg-transparent dark:bg-transparent transition-all duration-300">
+          
+          {/* Logo Section */}
+          <div className="flex items-center gap-12">
+            <Link to="/" className="flex items-center gap-2 transition-transform hover:scale-105">
               <Logo />
-            </a>
-            {/* Navigation menu */}
-            <NavigationMenu className="max-md:hidden">
-              <NavigationMenuList className="gap-2">
-                {navigationLinks.map((link, index) => (
-                  <>
-                    {link.role === "PUBLIC" && (
-                      <NavigationMenuItem key={index}>
-                        <NavigationMenuLink
-                          asChild
-                          className="text-muted-foreground hover:text-primary py-1.5 font-medium"
-                        >
-                          <Link to={link.href}>{link.label}</Link>
-                        </NavigationMenuLink>
-                      </NavigationMenuItem>
-                    )}
-                    {link.role === data?.data?.role && (
-                      <NavigationMenuItem key={index}>
-                        <NavigationMenuLink
-                          asChild
-                          className="text-muted-foreground hover:text-primary py-1.5 font-medium"
-                        >
-                          <Link to={link.href}>{link.label}</Link>
-                        </NavigationMenuLink>
-                      </NavigationMenuItem>
-                    )}
-                  </>
-                ))}
-              </NavigationMenuList>
-            </NavigationMenu>
+            </Link>
+
+            {/* Desktop Navigation */}
+            <div className="hidden lg:flex items-center gap-8">
+              {navigationLinks.map((link, index) => (
+                <Link 
+                  key={index} 
+                  to={link.href}
+                  className="flex items-center gap-1.5 text-[15px] font-semibold text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors"
+                >
+                  {link.label}
+                  {link.hasDropdown && (
+                    <svg className="size-3 mt-0.5 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                    </svg>
+                  )}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* Right Side Actions */}
+          <div className="flex items-center gap-8">
+            <div className="hidden sm:block">
+              <ModeToggle />
+            </div>
+
+            <div className="flex items-center gap-6">
+              {!data?.data?.email ? (
+                <>
+                  <Link to="/login" className="text-[15px] font-bold text-zinc-800 dark:text-zinc-200 hover:text-blue-600 transition-colors">
+                    Login
+                  </Link>
+                  <Button asChild className="h-11 px-8 bg-[#00aeef] hover:bg-[#009bd4] text-white rounded-[12px] shadow-[0_8px_16px_rgba(0,174,239,0.3)] transition-all font-bold text-[15px]">
+                    <Link to="/login">Sign Up</Link>
+                  </Button>
+                </>
+              ) : (
+                <div className="flex items-center gap-4">
+                  <Button 
+                    onClick={handleLogout}
+                    variant="ghost" 
+                    className="h-10 text-zinc-600 dark:text-zinc-400 font-bold text-sm"
+                  >
+                    Logout
+                  </Button>
+                  <Button asChild className="h-11 px-8 bg-[#00aeef] text-white rounded-[12px] font-bold">
+                    <Link to={data?.data?.role === role.admin ? "/admin" : data?.data?.role === role.agent ? "/agent" : "/user"}>
+                      Dashboard
+                    </Link>
+                  </Button>
+                </div>
+              )}
+            </div>
+
+            {/* Mobile Menu Toggle */}
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="lg:hidden rounded-lg text-zinc-600 dark:text-zinc-400 size-9"
+              onClick={() => setIsOpen(!isOpen)}
+            >
+              {isOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+            </Button>
           </div>
         </div>
-        {/* Right side */}
-        <div className="flex items-center gap-2">
-          <ModeToggle />
-          {data?.data?.email && (
-            <Button
-              onClick={handleLogout}
-              variant="outline"
-              className="text-sm"
+
+        {/* Mobile Navigation Menu */}
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="absolute top-24 left-4 right-4 lg:hidden p-4 rounded-3xl bg-white/95 dark:bg-zinc-900/95 backdrop-blur-2xl border border-white/20 dark:border-zinc-800 shadow-2xl z-50 overflow-hidden"
             >
-              Logout
-            </Button>
+              <div className="flex flex-col gap-2">
+                {navigationLinks.map((link, index) => {
+                  const isPublic = link.role === "PUBLIC";
+                  const isUserRole = link.role === data?.data?.role;
+                  
+                  if (!isPublic && !isUserRole) return null;
+
+                  return (
+                    <Link 
+                      key={index}
+                      to={link.href}
+                      onClick={() => setIsOpen(false)}
+                      className={`flex items-center justify-between p-4 rounded-2xl transition-all ${
+                        activeLink(link.href)
+                          ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
+                          : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
+                      }`}
+                    >
+                      <span className="font-bold text-lg">{link.label}</span>
+                      {activeLink(link.href) && <motion.div layoutId="mobile-indicator" className="w-1.5 h-1.5 bg-blue-600 rounded-full" />}
+                    </Link>
+                  );
+                })}
+                <div className="h-px bg-zinc-100 dark:bg-zinc-800 my-2" />
+                <div className="flex items-center justify-between p-2">
+                  <span className="text-sm font-bold text-zinc-500 ml-2">App Theme</span>
+                  <ModeToggle />
+                </div>
+                {data?.data?.email && (
+                  <Button 
+                    onClick={handleLogout}
+                    variant="ghost" 
+                    className="w-full justify-start gap-3 h-14 px-4 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-2xl font-bold"
+                  >
+                    <LogOut className="size-5" />
+                    Logout Account
+                  </Button>
+                )}
+              </div>
+            </motion.div>
           )}
-          {!data?.data?.email && (
-            <Button asChild className="text-sm">
-              <Link to="/login">Login</Link>
-            </Button>
-          )}
-        </div>
-      </div>
+        </AnimatePresence>
+      </nav>
     </header>
   );
 }
